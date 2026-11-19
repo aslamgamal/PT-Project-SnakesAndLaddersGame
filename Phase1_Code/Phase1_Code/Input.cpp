@@ -56,7 +56,6 @@ int Input::GetInteger(Output *pO) const
 	return 0; // this line should be changed with your implementation
 }
 
-//======================================================================================//
 //								Game  Functions									        //
 //======================================================================================//
 
