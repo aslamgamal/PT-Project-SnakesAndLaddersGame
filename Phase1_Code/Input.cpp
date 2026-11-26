@@ -47,13 +47,13 @@ int Input::GetInteger(Output *pO) const
 
 	///TODO: implement the GetInteger function as described in Input.h file 
 	//       using function GetString() defined above and function stoi()
-	
-
+	string s = GetString(pO);
+	int i = stoi(s);
 
 
 	// Note: stoi(s) converts string s into its equivalent integer (for example, "55" is converted to 55)
 
-	return 0; // this line should be changed with your implementation
+	return i; // this line should be changed with your implementation
 }
 
 //								Game  Functions									        //
@@ -81,9 +81,17 @@ ActionType Input::GetUserAction() const
 			switch (ClickedItemOrder)
 			{
 			case ITM_ADD_CARD: return ADD_CARD;
+			case ITM_SELECT_CARD: return SELECT_CARD;
+			case ITM_COPY_CARD: return COPY_CARD;
+			case ITM_PASTE_CARD: return PASTE_CARD;
+			case ITM_DELETE_CARD: return DELETE_CARD;
+			case ITM_MOVE_CARD: return MOVE_CARD;
+			case ITM_SHUFFLE_CARD: return SHUFFLE_CARD;
+			case ITM_SAVE_GRID: return SAVE_GRID;
+			case ITM_OPEN_GRID: return OPEN_GRID;
 			case ITM_EXIT: return EXIT;
 			case ITM_SWITCH_TO_PLAY_MODE: return TO_PLAY_MODE;			
-
+			
 			///TODO: Add cases for the other items of Design Mode
 
 
@@ -109,14 +117,28 @@ ActionType Input::GetUserAction() const
 		///TODO:
 		// perform checks similar to Design mode checks above for the Play Mode
 		// and return the corresponding ActionType
+		
+		// [1] If user clicks on the Toolbar
+		if (y >= 0 && y < UI.ToolBarHeight)
+		{
+			int ClickedItemOrder = (x / UI.MenuItemWidth);
+			switch (ClickedItemOrder)
+			{
+				case ITM_ROLL_DICE: return ROLL_DICE;
+				case ITM_INPUT_DICE: return INPUT_DICE;
+				case ITM_NEW_GAME: return NEW_GAME;
+				case ITM_SWITCH_TO_DESIGN_MODE: return TO_DESIGN_MODE;	// just for now ==> This should be updated
+			}
+		}
+		// [2] User clicks on the grid area
+		if ((y >= UI.ToolBarHeight) && (y < UI.height - UI.StatusBarHeight))
+		{
+			return GRID_AREA;
+		}
 
-		return TO_DESIGN_MODE;	// just for now ==> This should be updated
-
-
-
-
+		// [3] User clicks on the status bar
+		return STATUS;
 	}	
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////// 
@@ -132,9 +154,10 @@ CellPosition Input::GetCellClicked() const
 	{
 		if ( y >= UI.ToolBarHeight && y <= (UI.height - UI.StatusBarHeight))
 		{
-			///TODO: SetHCell and SetVCell of the object cellPost appropriately
-			//       using the coordinates x, y and the appropriate variables of the UI_Info Object (UI)
-			
+			///TODO: SetHCell and SetVCell of the object cellPost appropriately #DONE
+			//       using the coordinates x, y and the appropriate variables of the UI_Info Object (UI) 
+			cellPos.SetHCell(x);
+			cellPos.SetVCell(y);
 
 
 		}
